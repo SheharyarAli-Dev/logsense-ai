@@ -1,0 +1,38 @@
+﻿  main.cpp
+E:\C++\Tetris-Project\Tetris-Project\MainGame.h(122,60): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'main.cpp')
+  
+E:\C++\Tetris-Project\Tetris-Project\MainGame.h(122,39): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'main.cpp')
+  
+E:\C++\Tetris-Project\Tetris-Project\MainGame.h(136,61): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'main.cpp')
+  
+E:\C++\Tetris-Project\Tetris-Project\MainGame.h(136,39): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'main.cpp')
+  
+E:\C++\Tetris-Project\Tetris-Project\MainGame.h(153,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  (compiling source file 'main.cpp')
+  
+E:\C++\Tetris-Project\Tetris-Project\MainGame.h(381,39): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'main.cpp')
+  
+E:\C++\Tetris-Project\Tetris-Project\MainGame.h(380,39): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'main.cpp')
+  
+E:\C++\Tetris-Project\Tetris-Project\MainGame.h(399,61): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'main.cpp')
+  
+E:\C++\Tetris-Project\Tetris-Project\MainGame.h(398,39): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'main.cpp')
+  
+E:\C++\Tetris-Project\Tetris-Project\MainGame.h(408,39): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'main.cpp')
+  
+E:\C++\Tetris-Project\Tetris-Project\MainGame.h(407,39): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'main.cpp')
+  
+E:\C++\Tetris-Project\Tetris-Project\highScoreDisplay.h(93,36): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'main.cpp')
+  
+  Tetris-Project.vcxproj -> E:\C++\Tetris-Project\Debug\Tetris-Project.exe
