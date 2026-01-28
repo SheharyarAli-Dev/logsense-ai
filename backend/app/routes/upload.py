@@ -1,6 +1,7 @@
 from fastapi import APIRouter, UploadFile, File
 import shutil
 import os
+from app.services.parser import parse_log_file
 
 router = APIRouter()
 
@@ -15,11 +16,13 @@ async def upload_log(file: UploadFile = File(...)):
 
     file_path = os.path.join(UPLOAD_DIR, file.filename)
 
-    # Save file
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
+    parsed_data = parse_log_file(file_path)
+
     return {
         "filename": file.filename,
-        "message": "Log file uploaded successfully"
+        "total_lines_parsed": len(parsed_data),
+        "logs": parsed_data[:5]  
     }
