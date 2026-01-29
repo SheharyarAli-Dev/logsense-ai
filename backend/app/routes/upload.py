@@ -3,6 +3,7 @@ import shutil
 import os
 from app.services.parser import parse_log_file
 from app.services.classifier import classify_log
+from app.services.analyzer import analyze_root_cause
 
 router = APIRouter()
 
@@ -24,9 +25,13 @@ async def upload_log(file: UploadFile = File(...)):
     
     for log in parsed_data:
         log["category"] = classify_log(log)
+    
+    analysis = analyze_root_cause(parsed_data)
+
 
     return {
         "filename": file.filename,
         "total_logs": len(parsed_data),
-        "classified_logs": parsed_data[:5]
+        "analysis": analysis,
+        "sample_logs": parsed_data[:5]
     }
