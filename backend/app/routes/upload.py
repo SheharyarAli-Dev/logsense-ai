@@ -4,6 +4,7 @@ import os
 from app.services.parser import parse_log_file
 from app.services.classifier import classify_log
 from app.services.analyzer import analyze_root_cause
+from app.services.solutions import suggest_solution
 
 router = APIRouter()
 
@@ -27,11 +28,13 @@ async def upload_log(file: UploadFile = File(...)):
         log["category"] = classify_log(log)
     
     analysis = analyze_root_cause(parsed_data)
+    solutions = suggest_solution(analysis["root_cause"])
 
 
     return {
         "filename": file.filename,
         "total_logs": len(parsed_data),
         "analysis": analysis,
+        "suggested_fixes": solutions,
         "sample_logs": parsed_data[:5]
     }
