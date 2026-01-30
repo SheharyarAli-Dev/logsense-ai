@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LogSense AI</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>LogSense AI</h1>
+        <form id="uploadForm">
+            <input type="file" id="fileInput" accept=".log" required>
+            <button type="submit">Upload Log</button>
+        </form>
+
+        <div id="results">
+            <!-- Root cause, severity, suggested fixes, logs table will appear here -->
+        </div>
+        <div class="chart-container">
+            <canvas id="categoryChart" width="100" height="100"></canvas>
+        </div>
+
+            <!-- Add Chart.js CDN -->
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            <script src="js/upload.js"></script>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/upload.js"></script>
+</body>
+</html>
