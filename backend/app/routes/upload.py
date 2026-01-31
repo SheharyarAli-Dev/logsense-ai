@@ -36,5 +36,5 @@ async def upload_log(file: UploadFile = File(...)):
         "total_logs": len(parsed_data),
         "analysis": analysis,
         "suggested_fixes": solutions,
-        "sample_logs": parsed_data[:5]
+        "sample_logs": parsed_data[:15]
     }

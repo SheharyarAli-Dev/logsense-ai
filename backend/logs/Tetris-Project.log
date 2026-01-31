@@ -1,6 +1,0 @@
-﻿2026-01-27 10:15:30 ERROR Database connection failed
-2026-01-27 10:16:00 INFO Service started successfully
-2026-01-27 10:17:10 WARNING High memory usage detected
-2026-01-27 10:18:45 CRITICAL System crash imminent
-2026-01-27 10:19:20 INFO User login successful
-2026-01-27 10:20:05 ERROR File not found: config.yaml
