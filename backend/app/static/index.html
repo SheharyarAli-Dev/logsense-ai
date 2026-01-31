@@ -2,29 +2,773 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>LogSense AI</title>
-    <link rel="stylesheet" href="css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LogSense AI - Intelligent Log Analysis</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            animation: fadeIn 0.6s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            letter-spacing: 2px;
+            animation: slideDown 0.8s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .subtitle {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            font-weight: 300;
+        }
+
+        /* Upload Form Styles */
+        .upload-form {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            margin-bottom: 40px;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .upload-form:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.4);
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: -9999px;
+        }
+
+        .file-input-label {
+            display: inline-block;
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .file-input-label:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .file-input-label:active {
+            transform: scale(0.98);
+        }
+
+        .file-name {
+            color: #667eea;
+            font-weight: 600;
+            font-size: 0.95rem;
+            max-width: 300px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(245, 87, 108, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(245, 87, 108, 0.6);
+        }
+
+        .btn:active {
+            transform: translateY(-1px) scale(1.02);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Results Section */
+        .results {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .analysis-card {
+            background: white;
+            padding: 35px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            transition: all 0.4s ease;
+            border-left: 6px solid #667eea;
+        }
+
+        .analysis-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .analysis-card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 2rem;
+            border-bottom: 3px solid #f093fb;
+            padding-bottom: 10px;
+        }
+
+        .analysis-card h3 {
+            color: #764ba2;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+
+        .analysis-card p {
+            margin-bottom: 15px;
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+
+        .analysis-card strong {
+            color: #555;
+            font-weight: 700;
+        }
+
+        .severity {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .severity.high {
+            background: #ff4757;
+            color: white;
+        }
+
+        .severity.medium {
+            background: #ffa502;
+            color: white;
+        }
+
+        .severity.low {
+            background: #2ed573;
+            color: white;
+        }
+
+        .analysis-card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .analysis-card li {
+            padding: 12px 20px;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .analysis-card li:hover {
+            transform: translateX(10px);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .analysis-card li::before {
+            content: "✓";
+            position: absolute;
+            left: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+            transition: left 0.3s ease;
+        }
+
+        .analysis-card li:hover::before {
+            left: 10px;
+        }
+
+        .analysis-card li:hover {
+            padding-left: 45px;
+        }
+
+        /* Table Styles */
+        h3 {
+            color: white;
+            margin: 30px 0 20px;
+            font-size: 2rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .logs-table {
+            width: 100%;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .logs-table thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .logs-table th {
+            padding: 20px;
+            text-align: left;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+        }
+
+        .logs-table td {
+            padding: 18px 20px;
+            border-bottom: 1px solid #eee;
+            transition: all 0.3s ease;
+        }
+
+        .logs-table tbody tr {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .logs-table tbody tr:hover {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            transform: scale(1.01);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .logs-table td[data-category] {
+            font-weight: 700;
+            position: relative;
+        }
+
+        .logs-table td[data-category="ERROR"] {
+            color: #ff4757;
+        }
+
+        .logs-table td[data-category="WARNING"] {
+            color: #ffa502;
+        }
+
+        .logs-table td[data-category="INFO"] {
+            color: #2ed573;
+        }
+
+        .logs-table td[data-category="DEBUG"] {
+            color: #5352ed;
+        }
+
+        /* Chart Container Styles */
+        .chart-container {
+            background: white;
+            padding: 35px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            transition: all 0.4s ease;
+            max-width: 50%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .chart-container:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .chart-container h2 {
+            color: #667eea;
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+            text-align: center;
+            border-bottom: 3px solid #f093fb;
+            padding-bottom: 15px;
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            border: 6px solid rgba(255, 255, 255, 0.3);
+            border-top: 6px solid white;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .upload-form {
+                padding: 25px;
+            }
+
+            .analysis-card {
+                padding: 25px;
+            }
+
+            .chart-container {
+                padding: 25px;
+                max-width: 100%;
+            }
+
+            .logs-table {
+                font-size: 0.9rem;
+            }
+
+            .logs-table th,
+            .logs-table td {
+                padding: 12px;
+            }
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transform: translateX(400px);
+            transition: transform 0.4s ease;
+            z-index: 1000;
+            font-weight: 600;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast.error {
+            background: linear-gradient(135deg, #ff4757 0%, #ff6348 100%);
+        }
+
+        .toast.success {
+            background: linear-gradient(135deg, #2ed573 0%, #26de81 100%);
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1>LogSense AI</h1>
-        <form id="uploadForm">
+<div class="container">
+    <h1>LogSense AI</h1>
+    <p class="subtitle">Intelligent Log Analysis & Insights Dashboard</p>
+
+    <form id="uploadForm" class="upload-form">
+        <div class="file-input-wrapper">
             <input type="file" id="fileInput" accept=".log" required>
-            <button type="submit">Upload Log</button>
-        </form>
-
-        <div id="results">
-            <!-- Root cause, severity, suggested fixes, logs table will appear here -->
+            <label for="fileInput" class="file-input-label">
+                📁 Choose Log File
+            </label>
         </div>
-        <div class="chart-container">
-            <canvas id="categoryChart" width="100" height="100"></canvas>
-        </div>
+        <span class="file-name" id="fileName">No file selected</span>
+        <button type="submit" class="btn">🔍 Analyze Log</button>
+    </form>
 
-            <!-- Add Chart.js CDN -->
-            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-            <script src="js/upload.js"></script>
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <p>Analyzing your logs...</p>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="js/upload.js"></script>
+
+    <div id="results" class="results"></div>
+
+    <div class="chart-container" style="display: none;" id="categoryChartContainer">
+        <h2>📊 Log Categories Distribution</h2>
+        <canvas id="categoryChart"></canvas>
+    </div>
+
+    <div class="chart-container" style="display: none;" id="trendsChartContainer">
+        <h2>📈 Issue Trends Over Time</h2>
+        <canvas id="trendsChart"></canvas>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let trendsChartInstance = null;
+let categoryChartInstance = null;
+
+// File input change handler
+document.getElementById('fileInput').addEventListener('change', function(e) {
+    const fileName = e.target.files[0]?.name || 'No file selected';
+    document.getElementById('fileName').textContent = fileName;
+});
+
+document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    await uploadLog();
+});
+
+function showToast(message, type = 'info') {
+    const toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.className = `toast ${type}`;
+    toast.classList.add('show');
+    
+    setTimeout(() => {
+        toast.classList.remove('show');
+    }, 3000);
+}
+
+async function uploadLog() {
+    const fileInput = document.getElementById('fileInput');
+    const file = fileInput.files[0];
+    if (!file) {
+        showToast('Please select a log file.', 'error');
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const loading = document.getElementById('loading');
+    loading.classList.add('active');
+
+    try {
+        const response = await fetch("/upload-log", { method: "POST", body: formData });
+        const data = await response.json();
+
+        loading.classList.remove('active');
+        displayAnalysis(data);
+        drawCategoryChart(data.sample_logs);
+        drawTrendsChart(data.trends);
+        
+        document.getElementById('categoryChartContainer').style.display = 'block';
+        document.getElementById('trendsChartContainer').style.display = 'block';
+        
+        showToast('Analysis complete! ✓', 'success');
+
+    } catch (err) {
+        console.error(err);
+        loading.classList.remove('active');
+        showToast('Error uploading log file.', 'error');
+    }
+}
+
+function displayAnalysis(data) {
+    const resultsDiv = document.getElementById('results');
+    resultsDiv.innerHTML = "";
+
+    // Determine severity class
+    const severityClass = data.analysis.severity.toLowerCase();
+
+    // Analysis section
+    const analysisHTML = `
+        <div class="analysis-card">
+            <h2>🔍 Analysis Results</h2>
+            <p><strong>Root Cause:</strong> ${data.analysis.root_cause}</p>
+            <p><strong>Severity:</strong> <span class="severity ${severityClass}">${data.analysis.severity}</span></p>
+            <h3>💡 Suggested Fixes:</h3>
+            <ul>${data.suggested_fixes.map(fix => `<li>${fix}</li>`).join('')}</ul>
+        </div>
+    `;
+    resultsDiv.innerHTML += analysisHTML;
+
+    // Logs table
+    let tableHTML = `<h3>📋 Sample Logs</h3><table class="logs-table"><thead>
+        <tr><th>⏰ Timestamp</th><th>🏷️ Level</th><th>💬 Message</th><th>📁 Category</th></tr>
+    </thead><tbody>`;
+
+    data.sample_logs.forEach(log => {
+        tableHTML += `<tr>
+            <td>${log.timestamp}</td>
+            <td>${log.level}</td>
+            <td>${log.message}</td>
+            <td data-category="${log.category}">${log.category}</td>
+        </tr>`;
+    });
+
+    tableHTML += `</tbody></table>`;
+    resultsDiv.innerHTML += tableHTML;
+}
+
+function drawCategoryChart(parsedLogs) {
+    const counts = {};
+    parsedLogs.forEach(log => {
+        const cat = log.category;
+        counts[cat] = (counts[cat] || 0) + 1;
+    });
+
+    const labels = Object.keys(counts);
+    const data = Object.values(counts);
+    const backgroundColors = [
+        '#667eea',
+        '#764ba2',
+        '#f093fb',
+        '#f5576c',
+        '#4facfe',
+        '#00f2fe',
+        '#43e97b',
+        '#38f9d7'
+    ];
+
+    const ctx = document.getElementById('categoryChart').getContext('2d');
+    if (categoryChartInstance) categoryChartInstance.destroy();
+
+    categoryChartInstance = new Chart(ctx, {
+        type: 'doughnut',
+        data: { 
+            labels, 
+            datasets: [{ 
+                data, 
+                backgroundColor: backgroundColors,
+                borderWidth: 3,
+                borderColor: '#fff',
+                hoverOffset: 20
+            }] 
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { 
+                    position: 'right',
+                    labels: {
+                        font: { size: 14, weight: '600' },
+                        padding: 15,
+                        usePointStyle: true
+                    }
+                },
+                title: { 
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    padding: 12,
+                    titleFont: { size: 16, weight: 'bold' },
+                    bodyFont: { size: 14 },
+                    cornerRadius: 8
+                }
+            },
+            animation: {
+                animateScale: true,
+                animateRotate: true
+            }
+        }
+    });
+}
+
+function drawTrendsChart(trends) {
+    const ctx = document.getElementById('trendsChart').getContext('2d');
+
+    const labels = Object.keys(trends).sort();
+    const categories = new Set();
+    labels.forEach(label => Object.keys(trends[label]).forEach(cat => categories.add(cat)));
+
+    const colors = [
+        '#667eea',
+        '#f5576c',
+        '#4facfe',
+        '#43e97b',
+        '#fa709a',
+        '#feca57'
+    ];
+
+    const datasets = Array.from(categories).map((cat, index) => ({
+        label: cat,
+        data: labels.map(label => trends[label][cat] || 0),
+        fill: false,
+        borderColor: colors[index % colors.length],
+        backgroundColor: colors[index % colors.length],
+        tension: 0.4,
+        borderWidth: 3,
+        pointRadius: 5,
+        pointHoverRadius: 8,
+        pointBackgroundColor: colors[index % colors.length],
+        pointBorderColor: '#fff',
+        pointBorderWidth: 2
+    }));
+
+    if (trendsChartInstance) trendsChartInstance.destroy();
+
+    trendsChartInstance = new Chart(ctx, {
+        type: 'line',
+        data: { labels, datasets },
+        options: {
+            responsive: true,
+            interaction: {
+                mode: 'index',
+                intersect: false,
+            },
+            plugins: {
+                legend: { 
+                    position: 'top',
+                    labels: {
+                        font: { size: 14, weight: '600' },
+                        padding: 15,
+                        usePointStyle: true
+                    }
+                },
+                title: { 
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    padding: 12,
+                    titleFont: { size: 16, weight: 'bold' },
+                    bodyFont: { size: 14 },
+                    cornerRadius: 8
+                }
+            },
+            scales: {
+                x: { 
+                    title: { 
+                        display: true, 
+                        text: 'Time Period', 
+                        font: { size: 14, weight: 'bold' },
+                        color: '#667eea'
+                    },
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.05)'
+                    }
+                },
+                y: { 
+                    title: { 
+                        display: true, 
+                        text: 'Number of Issues', 
+                        font: { size: 14, weight: 'bold' },
+                        color: '#667eea'
+                    }, 
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.05)'
+                    }
+                }
+            },
+            animation: {
+                duration: 1500,
+                easing: 'easeInOutQuart'
+            }
+        }
+    });
+}
+</script>
 </body>
 </html>

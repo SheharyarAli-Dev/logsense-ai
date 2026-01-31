@@ -1,23 +1,50 @@
-def classify_log(log):
-    message = log["message"].lower()
+# Smarter keyword weights
+ISSUE_KEYWORDS = {
+    "Memory Issue": {
+        "memory": 3,
+        "ram": 2,
+        "heap": 2,
+        "leak": 4,
+        "overflow": 4
+    },
+    "Crash Issue": {
+        "crash": 4,
+        "failed": 3,
+        "fatal": 5,
+        "shutdown": 3,
+        "terminated": 4
+    },
+    "Disk Issue": {
+        "disk": 3,
+        "storage": 2,
+        "space": 2,
+        "full": 4,
+        "write error": 3
+    },
+    "Network Issue": {
+        "timeout": 3,
+        "connection": 2,
+        "unreachable": 4,
+        "refused": 3,
+        "network": 2
+    }
+}
 
-    if "memory" in message or "ram" in message:
-        return "Memory Issue"
+def classify_log_message(message: str):
+    message_lower = message.lower()
+    scores = {}
 
-    elif "disk" in message or "storage" in message:
-        return "Storage Issue"
+    # Score each issue type
+    for issue, keywords in ISSUE_KEYWORDS.items():
+        score = 0
+        for word, weight in keywords.items():
+            if word in message_lower:
+                score += weight
+        if score > 0:
+            scores[issue] = score
 
-    elif "network" in message or "timeout" in message or "connection" in message:
-        return "Network Issue"
-
-    elif "permission" in message or "access denied" in message:
-        return "Permission Issue"
-
-    elif "crash" in message or "fatal" in message or "shutdown" in message:
-        return "Crash Issue"
-
-    elif log["level"] == "ERROR" or log["level"] == "CRITICAL":
-        return "General Error"
-
+    # Choose highest score
+    if scores:
+        return max(scores, key=scores.get)
     else:
         return "Normal"
