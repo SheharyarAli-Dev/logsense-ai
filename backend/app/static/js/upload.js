@@ -19,7 +19,7 @@ form.addEventListener("submit", async (e) => {
     resultsDiv.innerHTML = "<p>Uploading and processing log...</p>";
 
     try {
-        const response = await fetch("/upload-log", {
+        const response = await fetch("/api/upload-log", {
             method: "POST",
             body: formData
         });
