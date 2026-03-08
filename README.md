@@ -1,8 +1,8 @@
 # LogSense AI
 
 **Intelligent Log Analysis Platform** — a full-stack system that parses, classifies, and diagnoses system logs, surfacing root causes, severity levels, and actionable fixes through a polished web dashboard.
-Link: https://ai-log-analyzer.netlify.app/
 ---
+Link: https://ai-log-analyzer.netlify.app/
 
 ## Overview
 
