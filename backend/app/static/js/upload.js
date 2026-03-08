@@ -19,7 +19,7 @@ form.addEventListener("submit", async (e) => {
     resultsDiv.innerHTML = "<p>Uploading and processing log...</p>";
 
     try {
-        const response = await fetch("/api/upload-log", {
+        const response = await fetch("https://ai-log-analyzer.netlify.app/api/upload-log/api/upload-log", {
             method: "POST",
             body: formData
         });
