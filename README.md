@@ -18,6 +18,7 @@
 ## 📸 Preview
 
 > Upload a `.log` file → get instant root-cause analysis, severity rating, suggested fixes, and interactive charts.
+<img width="1919" height="904" alt="image" src="https://github.com/user-attachments/assets/bb34b8cb-3a23-41f4-8df9-0425ccbadc31" />
 
 ---
 
